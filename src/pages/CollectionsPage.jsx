@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { collections, products } from '../data/jewelleryData'
+import SEO from '../components/SEO'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -236,6 +237,11 @@ export default function CollectionsPage() {
 
   return (
     <main className="bg-background">
+      <SEO
+        title="Collections"
+        description="Explore MAISON's curated jewellery collections — Eternal Bloom, Celestial Radiance, Heritage Redux, and Midnight Garden. Each tells a unique story in gold and diamonds."
+        path="/collections"
+      />
       {/* ── SECTION 1: PAGE HERO ── */}
       <section
         ref={heroRef}

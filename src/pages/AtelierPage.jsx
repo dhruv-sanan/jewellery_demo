@@ -1,9 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Car, Train, MapPin, Check } from 'lucide-react';
+import { Car, Train, MapPin, Check, Volume2, VolumeX } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import VisitNudge from '../components/VisitNudge';
+import SEO from '../components/SEO';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,8 +56,71 @@ export default function AtelierPage() {
   const containerRef = useRef(null);
   const revealRef = useRef(null);
   const currentFrameRef = useRef(0);
+  const audioRef = useRef(null);
+  const scrollProgressRef = useRef(0);
   const { images, progress, isLoaded } = useFramePreloader(FRAME_COUNT);
   const [formState, setFormState] = useState('idle');
+  const [isSoundOn, setIsSoundOn] = useState(true);
+  const isSoundOnRef = useRef(true);
+  const location = useLocation();
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    isSoundOnRef.current = isSoundOn;
+  }, [isSoundOn]);
+
+  // Start audio when frames are loaded (sound enabled by default)
+  useEffect(() => {
+    if (!isLoaded || !audioRef.current) return;
+    const audio = audioRef.current;
+    audio.volume = 0;
+    audio.play().catch(() => {
+      // Browser blocked autoplay — user will need to click the toggle
+    });
+  }, [isLoaded]);
+
+  // Stop audio on route change (cleanup)
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    };
+  }, [location.pathname]);
+
+  // Toggle sound handler
+  const toggleSound = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (isSoundOnRef.current) {
+      gsap.to(audio, { volume: 0, duration: 0.3, onComplete: () => audio.pause() });
+      setIsSoundOn(false);
+    } else {
+      audio.play().catch(() => {});
+      const p = scrollProgressRef.current;
+      const targetVol = p < 0.1 ? (p / 0.1) * 0.3 : p > 0.9 ? ((1 - p) / 0.1) * 0.3 : 0.3;
+      gsap.to(audio, { volume: targetVol, duration: 0.3 });
+      setIsSoundOn(true);
+    }
+  }, []);
+
+  // Compute volume from scroll progress
+  const updateAudioVolume = useCallback((scrollProgress) => {
+    scrollProgressRef.current = scrollProgress;
+    const audio = audioRef.current;
+    if (!audio || !isSoundOnRef.current) return;
+
+    let vol;
+    if (scrollProgress < 0.1) {
+      vol = (scrollProgress / 0.1) * 0.3;
+    } else if (scrollProgress > 0.9) {
+      vol = ((1 - scrollProgress) / 0.1) * 0.3;
+    } else {
+      vol = 0.3;
+    }
+    audio.volume = Math.max(0, Math.min(0.3, vol));
+  }, []);
 
   // Draw a specific frame on the canvas
   const drawFrame = useCallback((frameIndex) => {
@@ -133,11 +198,12 @@ export default function AtelierPage() {
           anticipatePin: 1,
           pinSpacing: true,
           invalidateOnRefresh: true,
-          onUpdate: () => {
+          onUpdate: (self) => {
             const newFrame = Math.round(obj.frame);
             if (newFrame !== currentFrameRef.current) {
               drawFrame(newFrame);
             }
+            updateAudioVolume(self.progress);
           },
         },
       });
@@ -208,7 +274,7 @@ export default function AtelierPage() {
     }, containerRef);
 
     return () => ctx.revert();
-  }, [isLoaded, drawFrame]);
+  }, [isLoaded, drawFrame, updateAudioVolume]);
 
   // Refresh ScrollTrigger after frames load — must happen after
   // the Layout page-entry animation (0.85s) completes so pin
@@ -271,6 +337,11 @@ export default function AtelierPage() {
 
   return (
     <div className="bg-background text-text-light min-h-screen">
+      <SEO
+        title="The Atelier"
+        description="Step inside MAISON's private atelier on Altamount Road, Mumbai. An immersive experience of luxury craftsmanship and bespoke jewellery design."
+        path="/atelier"
+      />
       {/* ═══ LOADING SCREEN ═══ */}
       <AnimatePresence>
         {!isLoaded && (
@@ -296,6 +367,9 @@ export default function AtelierPage() {
         )}
       </AnimatePresence>
 
+      {/* ═══ AMBIENT AUDIO ═══ */}
+      <audio ref={audioRef} src="/audio/atelier-ambiance.mp3" loop preload="auto" />
+
       {/* ═══ SECTION 1: CANVAS SCROLL EXPERIENCE ═══ */}
       <section ref={containerRef} className="relative w-screen h-screen">
         {/* The Canvas */}
@@ -304,6 +378,19 @@ export default function AtelierPage() {
           className="w-full h-full block"
           style={{ background: '#0A0A0A' }}
         />
+
+        {/* ═══ AMBIENT SOUND TOGGLE ═══ */}
+        <button
+          onClick={toggleSound}
+          className="absolute bottom-6 left-6 z-20 w-9 h-9 flex items-center justify-center border border-gold/60 hover:border-gold hover:bg-gold/10 transition-all duration-300 group"
+          aria-label={isSoundOn ? 'Mute ambient sound' : 'Enable ambient sound'}
+        >
+          {isSoundOn ? (
+            <Volume2 size={16} className="text-gold group-hover:scale-110 transition-transform" strokeWidth={1.5} />
+          ) : (
+            <VolumeX size={16} className="text-gold/60 group-hover:text-gold group-hover:scale-110 transition-all" strokeWidth={1.5} />
+          )}
+        </button>
 
         {/* ═══ BLUR OVERLAY (Step Inside hero) ═══ */}
         <div

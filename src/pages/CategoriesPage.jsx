@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { categories } from '../data/jewelleryData'
+import SEO from '../components/SEO'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -402,6 +403,11 @@ export default function CategoriesPage() {
 
   return (
     <main className="bg-background">
+      <SEO
+        title="Categories"
+        description="Browse MAISON's jewellery by category — necklaces, rings, earrings, bangles, bracelets, and bridal sets. Handcrafted luxury for every occasion."
+        path="/categories"
+      />
       {/* ── SECTION 1: PAGE HERO (70vh) ── */}
       <section
         ref={heroRef}

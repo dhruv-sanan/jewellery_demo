@@ -4,38 +4,35 @@ import gsap from 'gsap';
 export default function CustomCursor() {
     const cursorRef = useRef(null);
     const [isHovering, setIsHovering] = useState(false);
-    const [isTouchDevice, setIsTouchDevice] = useState(false);
-    const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+    const [shouldRender, setShouldRender] = useState(() => {
+        if (typeof window === 'undefined') return false;
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        return !isTouch && window.innerWidth >= 1024;
+    });
 
     useEffect(() => {
-        setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
-        
-        const handleResize = () => setWindowWidth(window.innerWidth);
-        window.addEventListener('resize', handleResize);
-        
-        return () => window.removeEventListener('resize', handleResize);
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const isSmall = window.innerWidth < 1024;
+        if (isTouch || isSmall) setShouldRender(false);
     }, []);
 
     useEffect(() => {
-        if (isTouchDevice || windowWidth < 1024) return;
+        if (!shouldRender || !cursorRef.current) return;
 
-        // Hide cursor initially until we get the first mousemove
         gsap.set(cursorRef.current, { scale: 0, opacity: 0 });
 
         const onMouseMove = (e) => {
-            // Show cursor and position it
             gsap.to(cursorRef.current, {
                 x: e.clientX,
                 y: e.clientY,
                 duration: 0.15,
                 ease: 'power2.out',
-                scale: isHovering ? 4 : 1, // 12px -> 48px
+                scale: isHovering ? 4 : 1,
                 opacity: 1,
             });
         };
 
         const handleMouseOver = (e) => {
-            // Check if hovering over an interactive element
             const target = e.target;
             const isInteractive = target.tagName === 'A' ||
                 target.tagName === 'BUTTON' ||
@@ -72,18 +69,15 @@ export default function CustomCursor() {
             document.removeEventListener('mouseleave', onMouseLeave);
             document.removeEventListener('mouseenter', onMouseEnter);
         };
-    }, [isHovering, isTouchDevice, windowWidth]);
+    }, [isHovering, shouldRender]);
 
-    if (isTouchDevice || windowWidth < 1024) return null;
+    if (!shouldRender) return null;
 
     return (
         <div
             ref={cursorRef}
-            className="custom-cursor hidden md:block fixed top-0 left-0 w-3 h-3 bg-[#C9A96E] rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 mix-blend-difference"
-            style={{
-                transformOrigin: "center top", // Customizing transform origin for better centering
-                willChange: "transform"
-            }}
+            className="custom-cursor fixed top-0 left-0 w-3 h-3 bg-[#C9A96E] rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 mix-blend-difference"
+            style={{ willChange: 'transform' }}
         />
     );
 }

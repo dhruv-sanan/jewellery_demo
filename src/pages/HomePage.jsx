@@ -1,3 +1,4 @@
+import SEO from '../components/SEO'
 import HeroSection from '../components/HeroSection';
 import MarqueeStrip from '../components/MarqueeStrip';
 import CategoriesSection from '../components/CategoriesSection';
@@ -12,15 +13,21 @@ import VisitNudge from '../components/VisitNudge';
 export default function HomePage() {
   return (
     <>
+      <SEO
+        description="Discover MAISON's handcrafted luxury jewellery collections. Exquisite diamonds, gold, and platinum pieces crafted in Mumbai since 1985."
+        path="/"
+      />
       <HeroSection />
       <MarqueeStrip />
 
       <div className="h-24 bg-gradient-to-b from-[#0A0A0A] to-[#F5F0EB] w-full" />
-      <div className="hidden md:block">
-        <CategoriesSection />
-      </div>
-      <div className="md:hidden">
-        <StackedCategoriesSection />
+      <div id="categories-section">
+        <div className="hidden md:block">
+          <CategoriesSection />
+        </div>
+        <div className="md:hidden">
+          <StackedCategoriesSection />
+        </div>
       </div>
 
       <div className="h-24 bg-gradient-to-b from-[#F5F0EB] to-[#0A0A0A] w-full" />

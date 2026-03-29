@@ -76,18 +76,18 @@ const Footer = () => {
                                 Redefining luxury jewellery for the modern world.
                             </p>
                             <div className="flex gap-6 items-center flex-wrap">
-                                <a href="#" aria-label="Instagram" className="text-gray-500 hover:text-[#C9A96E] transition-colors duration-300">
+                                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-500 hover:text-[#C9A96E] transition-colors duration-300">
                                     <Instagram className="w-5 h-5" />
                                 </a>
-                                <a href="#" aria-label="Pinterest" className="text-gray-500 hover:text-[#C9A96E] transition-colors duration-300">
+                                <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" aria-label="Pinterest" className="text-gray-500 hover:text-[#C9A96E] transition-colors duration-300">
                                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                                         <path d="M12 0a12 12 0 0 0-4.37 23.17c-.1-.94-.2-2.38.04-3.4l1.39-5.9s-.35-.71-.35-1.76c0-1.65.96-2.88 2.15-2.88 1.01 0 1.5.76 1.5 1.67 0 1.02-.65 2.54-.98 3.95-.28 1.17.59 2.13 1.74 2.13 2.09 0 3.69-2.2 3.69-5.38 0-2.81-2.02-4.78-4.9-4.78-3.34 0-5.3 2.5-5.3 5.09 0 1.01.39 2.09.87 2.68a.35.35 0 0 1 .08.34l-.33 1.33c-.05.21-.17.26-.39.15-1.46-.68-2.37-2.81-2.37-4.52 0-3.68 2.67-7.06 7.7-7.06 4.04 0 7.18 2.88 7.18 6.73 0 4.01-2.53 7.25-6.04 7.25-1.18 0-2.29-.61-2.67-1.34l-.73 2.77c-.26 1.01-.97 2.28-1.45 3.05A12 12 0 1 0 12 0z"/>
                                     </svg>
                                 </a>
-                                <a href="#" aria-label="Facebook" className="text-gray-500 hover:text-[#C9A96E] transition-colors duration-300">
+                                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-gray-500 hover:text-[#C9A96E] transition-colors duration-300">
                                     <Facebook className="w-5 h-5" />
                                 </a>
-                                <a href="#" aria-label="YouTube" className="text-gray-500 hover:text-[#C9A96E] transition-colors duration-300">
+                                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-gray-500 hover:text-[#C9A96E] transition-colors duration-300">
                                     <Youtube className="w-5 h-5" />
                                 </a>
                             </div>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import SEO from '../components/SEO'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -182,6 +183,11 @@ export default function ContactPage() {
 
   return (
     <>
+      <SEO
+        title="Contact"
+        description="Get in touch with MAISON Fine Jewellery. Visit our atelier at 14 Altamount Road, Mumbai, or book a private appointment."
+        path="/contact"
+      />
       {/* ═══ SECTION 1 — HERO ═══ */}
       <section
         ref={heroRef}

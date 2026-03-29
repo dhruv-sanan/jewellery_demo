@@ -3,6 +3,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import VisitNudge from '../components/VisitNudge'
+import SEO from '../components/SEO'
 
 // Timeline images — drop files into src/assets/heritage/
 import workshopImg from '../assets/heritage/heritage_workshop_1985.jpg'
@@ -110,44 +111,63 @@ function HeroSection() {
   const heroRef = useRef(null)
 
   useGSAP(() => {
-    const els = heroRef.current.querySelectorAll('[data-hero-animate]')
-    gsap.fromTo(
-      els,
-      { y: 40, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        ease: 'power4.out',
-        stagger: 0.12,
-        delay: 0.3,
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    
+    if (isMobile) {
+      const el = heroRef.current
+      const est = el.querySelector('.hero-est')
+      const title = el.querySelector('.hero-title')
+      const line = el.querySelector('.hero-line')
+      const tagline = el.querySelector('.hero-tagline')
+      const scroll = el.querySelector('.hero-scroll-indicator')
+
+      const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: 0.15 })
+      heroTl
+        .fromTo(est, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.7 }, 0.2)
+        .fromTo(title, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.9 }, 0.4)
+        .fromTo(line, { scaleX: 0, transformOrigin: 'center' }, { scaleX: 1, duration: 0.7 }, 0.7)
+        .fromTo(tagline, { opacity: 0 }, { opacity: 1, duration: 0.7 }, 0.9)
+        .fromTo(scroll, { opacity: 0 }, { opacity: 0.5, duration: 0.5 }, 1.2)
+    } else {
+      const els = heroRef.current.querySelectorAll('[data-hero-animate]')
+      gsap.fromTo(
+        els,
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: 'power4.out',
+          stagger: 0.12,
+          delay: 0.3,
+        }
+      )
+
+      const line = heroRef.current.querySelector('[data-gold-line]')
+      if (line) {
+        gsap.fromTo(line, { width: 0 }, { width: 60, duration: 1.2, ease: 'expo.out', delay: 0.8 })
       }
-    )
 
-    const line = heroRef.current.querySelector('[data-gold-line]')
-    if (line) {
-      gsap.fromTo(line, { width: 0 }, { width: 60, duration: 1.2, ease: 'expo.out', delay: 0.8 })
-    }
-
-    const indicator = heroRef.current.querySelector('[data-scroll-indicator]')
-    if (indicator) {
-      gsap.to(indicator, {
-        y: 8,
-        repeat: -1,
-        yoyo: true,
-        duration: 1.5,
-        ease: 'power2.inOut',
-      })
+      const indicator = heroRef.current.querySelector('[data-scroll-indicator]')
+      if (indicator) {
+        gsap.to(indicator, {
+          y: 8,
+          repeat: -1,
+          yoyo: true,
+          duration: 1.5,
+          ease: 'power2.inOut',
+        })
+      }
     }
   }, { scope: heroRef })
 
   return (
     <section
       ref={heroRef}
-      className="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-background"
+      className="relative h-[85vh] md:h-screen flex flex-col items-center justify-center overflow-hidden bg-background"
     >
       {/* Gold particle mesh — CSS animated */}
-      <div className="heritage-particles absolute inset-0 pointer-events-none" />
+      <div className="heritage-particles absolute inset-0 pointer-events-none md:block hidden" />
 
       {/* Subtle radial glow */}
       <div
@@ -160,13 +180,13 @@ function HeroSection() {
       <div className="relative z-10 flex flex-col items-center text-center px-6">
         <p
           data-hero-animate
-          className="font-secondary text-[11px] tracking-[0.3em] text-gold uppercase mb-6"
+          className="hero-est font-secondary text-[11px] tracking-[0.3em] text-gold uppercase mb-6"
         >
           Est. 1985
         </p>
         <h1
           data-hero-animate
-          className="font-primary font-normal text-text-light uppercase tracking-[0.1em] mb-8 leading-[1.05]"
+          className="hero-title font-primary font-normal text-text-light uppercase tracking-[0.1em] mb-8 leading-[1.05]"
           style={{ fontSize: 'clamp(48px, 7vw, 96px)' }}
         >
           Our Heritage
@@ -174,12 +194,11 @@ function HeroSection() {
         <div
           data-hero-animate
           data-gold-line
-          className="h-px bg-gold mb-8"
-          style={{ width: 0 }}
+          className="hero-line h-px bg-gold mb-8 mx-auto w-[60px]"
         />
         <p
           data-hero-animate
-          className="font-primary italic text-[20px] md:text-[24px] text-gold leading-[1.6] max-w-[650px]"
+          className="hero-tagline font-primary italic text-[17px] md:text-[24px] text-gold leading-[1.6] max-w-[300px] md:max-w-[650px]"
         >
           Four generations. One unwavering pursuit of perfection.
         </p>
@@ -188,7 +207,7 @@ function HeroSection() {
       {/* Scroll indicator */}
       <div
         data-scroll-indicator
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50"
+        className="hero-scroll-indicator absolute bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50"
       >
         <span className="font-secondary text-[10px] tracking-[0.3em] text-text-light uppercase">
           Scroll
@@ -205,45 +224,23 @@ function HeroSection() {
 // ─── Timeline Section (Pinned, Apple-style) ────────────────────────
 function TimelineSection() {
   const sectionRef = useRef(null)
-  const [isMobile, setIsMobile] = useState(false)
+  // Initialize isMobile CORRECTLY so the desktop pinned timeline is never
+  // created on mobile.  useState(false) caused a phantom desktop render →
+  // pin-spacer → stale layout for chapters 2-4 ScrollTrigger positions.
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth < 768
+  )
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
-    check()
     window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  // Desktop: pinned scroll with crossfade
+  // Desktop: pinned scroll with crossfade + word-by-word teleprompter
   useGSAP(() => {
-    if (isMobile) {
-      // Mobile: simple scroll-triggered reveals per phase
-      const phases = sectionRef.current.querySelectorAll('[data-timeline-phase]')
-      phases.forEach((phase) => {
-        const img = phase.querySelector('[data-parallax-image]')
-        const textEls = phase.querySelectorAll('[data-animate]')
+    if (isMobile) return
 
-        if (img) {
-          gsap.fromTo(img, { yPercent: -5 }, {
-            yPercent: 5,
-            ease: 'none',
-            scrollTrigger: { trigger: phase, start: 'top bottom', end: 'bottom top', scrub: true },
-          })
-        }
-
-        gsap.fromTo(textEls, { y: 30, opacity: 0 }, {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: 'power4.out',
-          stagger: 0.1,
-          scrollTrigger: { trigger: phase, start: 'top 80%', toggleActions: 'play none none none' },
-        })
-      })
-      return
-    }
-
-    // Desktop pinned timeline
     const phases = sectionRef.current.querySelectorAll('[data-timeline-phase]')
     const yearEl = sectionRef.current.querySelector('[data-year-counter]')
 
@@ -251,29 +248,39 @@ function TimelineSection() {
       scrollTrigger: {
         trigger: sectionRef.current,
         start: 'top top',
-        end: '+=400%',
+        end: '+=500%',
         pin: true,
         scrub: 1,
         anticipatePin: 1,
       },
     })
 
-    // Animate first phase in
-    const firstTextEls = phases[0].querySelectorAll('[data-animate]')
-    tl.fromTo(firstTextEls, { y: 30, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 0.5, ease: 'power4.out', stagger: 0.08,
+    // ── First phase: fade in heading elements, then teleprompter ──
+    const firstHeadingEls = phases[0].querySelectorAll('[data-animate]')
+    const firstWordEls = phases[0].querySelectorAll('[data-tp-word]')
+
+    tl.fromTo(firstHeadingEls, { y: 30, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 0.4, ease: 'power4.out', stagger: 0.08,
     })
 
-    // Hold first phase
-    tl.to({}, { duration: 1.5 })
+    // Word-by-word teleprompter for first phase
+    tl.fromTo(firstWordEls,
+      { color: '#222' },
+      { color: '#999', stagger: 0.012, duration: 0.8, ease: 'none' },
+      '-=0.1',
+    )
 
-    // Crossfade between phases
+    // Hold
+    tl.to({}, { duration: 1.0 })
+
+    // ── Crossfade between phases ──
     for (let i = 0; i < phases.length - 1; i++) {
       const currentPhase = phases[i]
       const nextPhase = phases[i + 1]
-      const nextTextEls = nextPhase.querySelectorAll('[data-animate]')
+      const nextHeadingEls = nextPhase.querySelectorAll('[data-animate]')
+      const nextWordEls = nextPhase.querySelectorAll('[data-tp-word]')
 
-      // Fade out current
+      // Fade out current phase
       tl.to(currentPhase, { opacity: 0, duration: 0.8, ease: 'power2.inOut' })
 
       // Update year counter
@@ -283,55 +290,143 @@ function TimelineSection() {
         snap: { innerText: 1 },
       }, '<')
 
-      // Fade in next
+      // Fade in next phase
       tl.fromTo(nextPhase, { opacity: 0 }, { opacity: 1, duration: 0.8, ease: 'power2.inOut' }, '<0.3')
-      tl.fromTo(nextTextEls, { y: 20, opacity: 0 }, {
-        y: 0, opacity: 1, duration: 0.5, ease: 'power4.out', stagger: 0.06,
+
+      // Heading elements slide up
+      tl.fromTo(nextHeadingEls, { y: 20, opacity: 0 }, {
+        y: 0, opacity: 1, duration: 0.4, ease: 'power4.out', stagger: 0.06,
       }, '<0.2')
 
+      // Word-by-word teleprompter for this phase
+      tl.fromTo(nextWordEls,
+        { color: '#222' },
+        { color: '#999', stagger: 0.012, duration: 0.8, ease: 'none' },
+        '-=0.1',
+      )
+
       // Hold
-      tl.to({}, { duration: 1.5 })
+      tl.to({}, { duration: 1.0 })
     }
+  }, { scope: sectionRef, dependencies: [isMobile] })
+
+  // Mobile: simple trigger-based animations — NO pins, NO pin-spacers
+  useGSAP(() => {
+    if (!isMobile) return
+    const root = sectionRef.current
+    if (!root) return
+
+    // Image fade-in per chapter
+    root.querySelectorAll('.m-chapter-image').forEach((img) => {
+      gsap.fromTo(img,
+        { opacity: 0, scale: 1.03 },
+        {
+          opacity: 1, scale: 1,
+          duration: 0.9, ease: 'power2.out',
+          scrollTrigger: {
+            trigger: img,
+            start: 'top 90%',
+            toggleActions: 'play none none none',
+          },
+        }
+      )
+    })
+
+    // Chapter meta elements fade-in
+    root.querySelectorAll('.m-chapter-meta').forEach((el) => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 15 },
+        {
+          opacity: 1, y: 0,
+          duration: 0.6, ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+        }
+      )
+    })
+
+    // Teleprompter word-by-word reveal per chapter text block.
+    // Uses explicit timeline + ScrollTrigger.create for reliability.
+    // Trigger = the <p> element itself (tight scroll range, not the whole card).
+    root.querySelectorAll('.tp-container').forEach((container) => {
+      const words = container.querySelectorAll('.tp-word')
+      if (!words.length) return
+
+      const tl = gsap.timeline()
+      tl.fromTo(words,
+        { color: '#2A2A2A', opacity: 0.25 },
+        { color: '#CCCCCC', opacity: 1, stagger: 0.03, ease: 'none' }
+      )
+
+      ScrollTrigger.create({
+        trigger: container,
+        start: 'top 80%',
+        end: 'bottom 50%',
+        scrub: 0.3,
+        animation: tl,
+        invalidateOnRefresh: true,
+      })
+    })
+
+    // Belt-and-suspenders: refresh positions after paint
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => ScrollTrigger.refresh(true))
+    })
   }, { scope: sectionRef, dependencies: [isMobile] })
 
   if (isMobile) {
     return (
-      <section ref={sectionRef} className="relative bg-background">
+      <section ref={sectionRef} className="relative bg-[#0A0A0A]">
         {timelinePhases.map((phase, i) => (
-          <div
-            key={i}
-            data-timeline-phase
-            className="relative min-h-screen flex flex-col"
-          >
-            {/* Image */}
-            <div className="relative w-full h-[50vh] overflow-hidden">
+          <div key={i}>
+            {/* Image — full width, 50vh */}
+            <div className="m-chapter-image relative w-full h-[50vh] overflow-hidden">
               <img
-                data-parallax-image
                 src={phase.image}
                 alt={phase.title}
-                loading="lazy"
+                className="w-full h-full object-cover"
+                loading={i === 0 ? 'eager' : 'lazy'}
                 decoding="async"
-                className="absolute inset-0 w-full h-[110%] object-cover will-change-transform"
-                style={{ top: '-5%' }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-              {/* Year watermark */}
-              <span className="absolute bottom-6 right-6 font-primary text-[100px] md:text-[160px] text-text-light/[0.05] leading-none select-none pointer-events-none">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent" />
+              <span className="absolute bottom-3 right-5 font-primary text-[64px] text-white/[0.05] font-light leading-none select-none pointer-events-none">
                 {phase.year}
               </span>
             </div>
-            {/* Content */}
-            <div className="px-6 py-12">
-              <p data-animate className="font-secondary text-[11px] tracking-[0.3em] text-gold uppercase mb-4">
-                {phase.title}
-              </p>
-              <h3 data-animate className="font-primary text-[28px] text-text-light uppercase tracking-[0.1em] mb-6 leading-[1.1]">
+
+            {/* Content — BELOW the image, dark background */}
+            <div className="px-6 pt-6 pb-12 bg-[#0A0A0A]">
+              <p className="m-chapter-meta font-secondary text-[11px] tracking-[0.25em] text-[#C9A96E] uppercase mb-2">
                 Chapter {String(i + 1).padStart(2, '0')}
+              </p>
+              <h3 className="m-chapter-meta font-primary text-[24px] text-[#FAFAFA] uppercase tracking-[0.1em] mb-1 leading-[1.1]">
+                {phase.title}
               </h3>
-              <p data-animate className="font-secondary text-[15px] text-[#999] leading-[1.9] max-w-[500px]">
-                {phase.text}
+              <div className="w-10 h-[1px] bg-[#C9A96E] mb-5" />
+
+              {/* Teleprompter text — word-by-word scroll reveal */}
+              <p className="tp-container font-secondary text-[15px] leading-[1.85] tracking-wide">
+                {phase.text.split(' ').map((word, j, arr) => (
+                  <span
+                    key={j}
+                    className="tp-word"
+                    style={{ color: '#2A2A2A', opacity: 0.25 }}
+                  >
+                    {word}{j < arr.length - 1 ? ' ' : ''}
+                  </span>
+                ))}
               </p>
             </div>
+
+            {/* Gold divider between chapters */}
+            {i < timelinePhases.length - 1 && (
+              <div className="flex justify-center py-1 bg-[#0A0A0A]">
+                <div className="w-[1px] h-12 bg-gradient-to-b from-[#C9A96E]/30 via-[#C9A96E]/10 to-transparent" />
+              </div>
+            )}
           </div>
         ))}
       </section>
@@ -384,8 +479,12 @@ function TimelineSection() {
                 {phase.title}
               </h3>
               <div data-animate className="w-[40px] h-px bg-gold mb-6" />
-              <p data-animate className="font-secondary text-[15px] text-[#999] leading-[1.9] max-w-[420px]">
-                {phase.text}
+              <p className="font-secondary text-[15px] leading-[1.9] max-w-[420px]">
+                {phase.text.split(' ').map((word, j, arr) => (
+                  <span key={j} data-tp-word style={{ color: '#222' }}>
+                    {word}{j < arr.length - 1 ? ' ' : ''}
+                  </span>
+                ))}
               </p>
             </div>
           </div>
@@ -415,90 +514,111 @@ function ValuesSection() {
   const sectionRef = useRef(null)
 
   useGSAP(() => {
-    const cards = sectionRef.current.querySelectorAll('[data-value-card]')
-    cards.forEach((card) => {
-      const els = card.querySelectorAll('[data-animate]')
-      const line = card.querySelector('[data-gold-line]')
-      const img = card.querySelector('[data-value-image]')
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
 
-      gsap.fromTo(els, { y: 30, opacity: 0 }, {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: 'power4.out',
-        stagger: 0.1,
-        scrollTrigger: { trigger: card, start: 'top 80%', toggleActions: 'play none none none' },
+    if (isMobile) {
+      const cards = sectionRef.current.querySelectorAll('.value-card');
+      cards.forEach((card) => {
+        gsap.fromTo(card,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+            }
+          }
+        );
+      });
+    } else {
+      const cards = sectionRef.current.querySelectorAll('[data-value-card]')
+      cards.forEach((card) => {
+        const els = card.querySelectorAll('[data-animate]')
+        const line = card.querySelector('[data-gold-line]')
+        const img = card.querySelector('[data-value-image]')
+
+        gsap.fromTo(els, { y: 30, opacity: 0 }, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: 'power4.out',
+          stagger: 0.1,
+          scrollTrigger: { trigger: card, start: 'top 80%', toggleActions: 'play none none none' },
+        })
+
+        if (line) {
+          gsap.fromTo(line, { width: 0 }, {
+            width: 40,
+            duration: 1,
+            ease: 'expo.out',
+            scrollTrigger: { trigger: card, start: 'top 80%', toggleActions: 'play none none none' },
+          })
+        }
+
+        if (img) {
+          gsap.fromTo(img, { scale: 1 }, {
+            scale: 1.05,
+            duration: 10,
+            ease: 'none',
+            scrollTrigger: { trigger: card, start: 'top 80%', toggleActions: 'play none none none' },
+          })
+        }
       })
-
-      if (line) {
-        gsap.fromTo(line, { width: 0 }, {
-          width: 40,
-          duration: 1,
-          ease: 'expo.out',
-          scrollTrigger: { trigger: card, start: 'top 80%', toggleActions: 'play none none none' },
-        })
-      }
-
-      if (img) {
-        gsap.fromTo(img, { scale: 1 }, {
-          scale: 1.05,
-          duration: 10,
-          ease: 'none',
-          scrollTrigger: { trigger: card, start: 'top 80%', toggleActions: 'play none none none' },
-        })
-      }
-    })
+    }
   }, { scope: sectionRef })
 
   return (
-    <section ref={sectionRef} className="relative bg-background-light py-section px-6 md:px-12 lg:px-16">
-      {/* Section header */}
-      <div className="max-w-7xl mx-auto mb-20 text-center">
-        <p className="font-secondary text-[11px] tracking-[0.3em] text-gold uppercase mb-4">
-          What We Stand For
-        </p>
-        <h2
-          className="font-primary text-text-dark uppercase tracking-[0.1em] leading-[1.1]"
-          style={{ fontSize: 'clamp(36px, 5vw, 64px)' }}
-        >
-          Our Values
-        </h2>
-      </div>
+    <section ref={sectionRef} className="bg-background-light py-20 md:py-40">
+      <div className="px-6 md:px-0 md:max-w-6xl md:mx-auto">
+        {/* Section header */}
+        <div className="text-center mb-16">
+          <p className="font-secondary text-[11px] tracking-[0.3em] text-gold uppercase mb-3">
+            What We Stand For
+          </p>
+          <h2 className="font-primary text-[36px] md:text-[52px] text-text-dark uppercase tracking-[0.1em]">
+            Our Values
+          </h2>
+        </div>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 lg:gap-12">
-        {values.map((val, i) => (
-          <div key={i} data-value-card className="flex flex-col">
-            {/* Image */}
-            <div className="relative w-full aspect-[4/3] overflow-hidden mb-8">
-              <img
-                data-value-image
-                src={val.image}
-                alt={val.title}
-                loading="lazy"
-                decoding="async"
-                className="w-full h-full object-cover will-change-transform"
+        {/* Values cards — vertical on mobile */}
+        <div className="space-y-16 md:space-y-0 md:grid md:grid-cols-3 md:gap-12">
+          {values.map((val, i) => (
+            <div key={i} data-value-card className="value-card flex flex-col">
+              {/* Image */}
+              <div className="w-full h-[240px] md:aspect-[4/3] md:h-auto overflow-hidden mb-6 md:mb-8">
+                <img
+                  data-value-image
+                  src={val.image}
+                  alt={val.title}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover will-change-transform"
+                />
+              </div>
+
+              {/* Gold line */}
+              <div
+                data-gold-line
+                className="w-10 h-[1px] bg-gold mb-5 md:mb-6"
               />
+
+              {/* Content */}
+              <h3 data-animate className="font-primary text-[28px] md:text-[32px] text-text-dark uppercase tracking-[0.15em] mb-2 md:mb-3 leading-[1.1]">
+                {val.title}
+              </h3>
+              <p data-animate className="font-primary italic text-[15px] md:text-[18px] text-gold leading-[1.5] mb-4">
+                {val.statement}
+              </p>
+              <p data-animate className="font-secondary text-[14px] text-[#666] leading-[1.8] md:leading-relaxed">
+                {val.description}
+              </p>
             </div>
-
-            {/* Gold line */}
-            <div
-              data-gold-line
-              className="h-px bg-gold mb-6"
-              style={{ width: 0 }}
-            />
-
-            {/* Content */}
-            <h3 data-animate className="font-primary text-[28px] md:text-[32px] text-text-dark uppercase tracking-[0.15em] mb-3 leading-[1.1]">
-              {val.title}
-            </h3>
-            <p data-animate className="font-primary italic text-[18px] text-gold leading-[1.5] mb-4">
-              {val.statement}
-            </p>
-            <p data-animate className="font-secondary text-[14px] text-[#666] leading-[1.8]">
-              {val.description}
-            </p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   )
@@ -509,40 +629,61 @@ function ArtisansSection() {
   const sectionRef = useRef(null)
 
   useGSAP(() => {
-    // Header reveal
-    const headerEls = sectionRef.current.querySelectorAll('[data-header-animate]')
-    gsap.fromTo(headerEls, { y: 30, opacity: 0 }, {
-      y: 0,
-      opacity: 1,
-      duration: 0.8,
-      ease: 'power4.out',
-      stagger: 0.1,
-      scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', toggleActions: 'play none none none' },
-    })
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
 
-    // Card reveals with parallax on portraits
-    const cards = sectionRef.current.querySelectorAll('[data-artisan-card]')
-    cards.forEach((card) => {
-      const portrait = card.querySelector('[data-portrait]')
-      const els = card.querySelectorAll('[data-animate]')
-
-      if (portrait) {
-        gsap.fromTo(portrait, { yPercent: -8 }, {
-          yPercent: 8,
-          ease: 'none',
-          scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true },
-        })
-      }
-
-      gsap.fromTo(els, { y: 30, opacity: 0 }, {
+    if (isMobile) {
+      const cards = sectionRef.current.querySelectorAll('.artisan-card');
+      cards.forEach((card) => {
+        gsap.fromTo(card,
+          { opacity: 0, y: 25 },
+          {
+            opacity: 1, y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+            }
+          }
+        );
+      });
+    } else {
+      // Header reveal
+      const headerEls = sectionRef.current.querySelectorAll('[data-header-animate]')
+      gsap.fromTo(headerEls, { y: 30, opacity: 0 }, {
         y: 0,
         opacity: 1,
         duration: 0.8,
         ease: 'power4.out',
-        stagger: 0.08,
-        scrollTrigger: { trigger: card, start: 'top 80%', toggleActions: 'play none none none' },
+        stagger: 0.1,
+        scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', toggleActions: 'play none none none' },
       })
-    })
+
+      // Card reveals with parallax on portraits
+      const cards = sectionRef.current.querySelectorAll('[data-artisan-card]')
+      cards.forEach((card) => {
+        const portrait = card.querySelector('[data-portrait]')
+        const els = card.querySelectorAll('[data-animate]')
+
+        if (portrait) {
+          gsap.fromTo(portrait, { yPercent: -8 }, {
+            yPercent: 8,
+            ease: 'none',
+            scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true },
+          })
+        }
+
+        gsap.fromTo(els, { y: 30, opacity: 0 }, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: 'power4.out',
+          stagger: 0.08,
+          scrollTrigger: { trigger: card, start: 'top 80%', toggleActions: 'play none none none' },
+        })
+      })
+    }
   }, { scope: sectionRef })
 
   return (
@@ -568,7 +709,7 @@ function ArtisansSection() {
       {/* Artisan cards */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 lg:gap-16">
         {artisans.map((artisan, i) => (
-          <div key={i} data-artisan-card className="flex flex-col items-center text-center">
+          <div key={i} data-artisan-card className="artisan-card flex flex-col items-center text-center">
             {/* Portrait — circular crop with overflow for parallax */}
             <div className="w-[200px] h-[200px] overflow-hidden mb-8 relative" style={{ clipPath: 'circle(50% at 50% 50%)' }}>
               <img
@@ -593,8 +734,8 @@ function ArtisansSection() {
             </p>
 
             {/* Quote */}
-            <div data-animate className="relative px-4">
-              <span className="font-primary text-[48px] text-gold/20 absolute -top-4 -left-1 leading-none select-none">
+            <div data-animate className="relative pl-8 pr-14 md:px-4">
+              <span className="font-primary text-[48px] text-gold/20 absolute -top-4 left-0 md:-left-1 leading-none select-none">
                 &ldquo;
               </span>
               <p className="font-primary italic text-[16px] text-[#aaa] leading-[1.7]">
@@ -614,7 +755,9 @@ function NumbersSection() {
   const numbersRef = useRef([])
 
   useGSAP(() => {
-    // Header
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
+    // Header animation for both
     const headerEls = sectionRef.current.querySelectorAll('[data-header-animate]')
     gsap.fromTo(headerEls, { y: 30, opacity: 0 }, {
       y: 0,
@@ -625,50 +768,86 @@ function NumbersSection() {
       scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', toggleActions: 'play none none none' },
     })
 
-    // Number counters
-    ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: 'top 70%',
-      once: true,
-      onEnter: () => {
-        numbersRef.current.forEach((el, index) => {
-          if (!el) return
-          const target = stats[index].value
-          const suffix = stats[index].suffix
+    if (isMobile) {
+      const counterEls = sectionRef.current.querySelectorAll('.counter-value');
+      counterEls.forEach((el) => {
+        const target = parseInt(el.dataset.target, 10);
+        const suffix = el.dataset.suffix || '';
 
-          gsap.fromTo(
-            el,
-            { innerText: 0 },
-            {
-              innerText: target,
-              duration: 2.5,
-              ease: 'power3.out',
-              snap: { innerText: 1 },
-              delay: index * 0.15,
-              onUpdate() {
-                const current = Math.round(parseFloat(el.innerText))
-                el.innerText = current.toLocaleString() + suffix
-              },
+        gsap.fromTo(el,
+          { innerText: 0 },
+          {
+            innerText: target,
+            duration: 2.5,
+            ease: 'power2.out',
+            snap: { innerText: 1 },
+            scrollTrigger: {
+              trigger: el.closest('.counters-section'),
+              start: 'top 80%',
+              toggleActions: 'play none none none',
+            },
+            onUpdate: function() {
+              el.textContent = Math.round(parseFloat(this.targets()[0].innerText)).toLocaleString() + suffix;
             }
-          )
-        })
-      },
-    })
+          }
+        );
+      });
 
-    // Fade in stat blocks
-    const statBlocks = sectionRef.current.querySelectorAll('[data-stat-block]')
-    gsap.fromTo(statBlocks, { y: 40, opacity: 0 }, {
-      y: 0,
-      opacity: 1,
-      duration: 0.8,
-      ease: 'power4.out',
-      stagger: 0.12,
-      scrollTrigger: { trigger: sectionRef.current, start: 'top 75%', toggleActions: 'play none none none' },
-    })
+      const statBlocks = sectionRef.current.querySelectorAll('[data-stat-block]')
+      gsap.fromTo(statBlocks, { y: 20, opacity: 0 }, {
+        y: 0,
+        opacity: 1,
+        duration: 0.6,
+        ease: 'power3.out',
+        stagger: 0.1,
+        scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', toggleActions: 'play none none none' },
+      })
+    } else {
+      // Number counters
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top 70%',
+        once: true,
+        onEnter: () => {
+          numbersRef.current.forEach((el, index) => {
+            if (!el) return
+            const target = stats[index].value
+            const suffix = stats[index].suffix
+
+            gsap.fromTo(
+              el,
+              { innerText: 0 },
+              {
+                innerText: target,
+                duration: 2.5,
+                ease: 'power3.out',
+                snap: { innerText: 1 },
+                delay: index * 0.15,
+                onUpdate() {
+                  const current = Math.round(parseFloat(el.innerText))
+                  el.innerText = current.toLocaleString() + suffix
+                },
+              }
+            )
+          })
+        },
+      })
+
+      // Fade in stat blocks
+      const statBlocks = sectionRef.current.querySelectorAll('[data-stat-block]')
+      gsap.fromTo(statBlocks, { y: 40, opacity: 0 }, {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power4.out',
+        stagger: 0.12,
+        scrollTrigger: { trigger: sectionRef.current, start: 'top 75%', toggleActions: 'play none none none' },
+      })
+    }
   }, { scope: sectionRef })
 
   return (
-    <section ref={sectionRef} className="relative bg-background py-section px-6 md:px-12">
+    <section ref={sectionRef} className="counters-section relative bg-background py-section px-6 md:px-12">
       {/* Subtle gold glow */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -698,7 +877,9 @@ function NumbersSection() {
             <div key={i} data-stat-block className="flex flex-col items-center text-center">
               <div
                 ref={(el) => (numbersRef.current[i] = el)}
-                className="font-primary text-text-light leading-none mb-4"
+                data-target={stat.value}
+                data-suffix={stat.suffix}
+                className="counter-value font-primary text-text-light leading-none mb-4"
                 style={{ fontSize: 'clamp(56px, 8vw, 100px)' }}
               >
                 0
@@ -719,6 +900,11 @@ function NumbersSection() {
 export default function HeritagePage() {
   return (
     <main className="bg-background">
+      <SEO
+        title="Heritage"
+        description="Since 1985, MAISON has been crafting exquisite jewellery in Mumbai. Discover our legacy of master artisans, ethical sourcing, and timeless design."
+        path="/heritage"
+      />
       <HeroSection />
       <TimelineSection />
 

@@ -67,18 +67,18 @@ export default function VisitNudge({
         </p>
         <div
           data-nudge-animate
-          className="flex flex-col sm:flex-row items-center gap-4"
+          className="flex flex-col md:flex-row items-center gap-4 md:gap-6 w-full md:w-auto px-6 md:px-0"
         >
           <Link
             to={primaryBtnLink}
-            className="font-secondary text-[14px] text-background bg-gold px-8 py-4 tracking-wide transition-all duration-500 hover:bg-gold-hover"
+            className="w-full md:w-auto text-center font-secondary text-[13px] text-background bg-gold px-8 py-4 tracking-[0.1em] uppercase transition-all duration-500 hover:bg-gold-hover"
           >
             {primaryBtnText}
           </Link>
           {!hideSecondaryBtn && (
             <Link
               to={secondaryBtnLink}
-              className="group inline-flex items-center gap-2 font-secondary text-[14px] text-gold border border-gold px-8 py-4 tracking-wide transition-all duration-500 hover:bg-gold hover:text-background"
+              className="group w-full md:w-auto text-center inline-flex justify-center items-center gap-2 font-secondary text-[13px] text-gold border border-gold px-8 py-4 tracking-[0.1em] uppercase transition-all duration-500 hover:bg-gold hover:text-background"
             >
               <span>{secondaryBtnText}</span>
               <span className="transition-transform duration-300 group-hover:translate-x-1">

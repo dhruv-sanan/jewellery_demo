@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar, Diamond, Sparkles, ChevronLeft, ChevronRight, ArrowRight, Check, Download } from 'lucide-react'
+import SEO from '../components/SEO'
 
 // Category tile images — reuse existing assets
 import bridalImg from '../assets/categories/bridal.jpg'
@@ -132,11 +133,11 @@ function HeroSection() {
   return (
     <section
       ref={heroRef}
-      className="relative h-[50vh] min-h-[420px] flex flex-col items-center justify-center bg-background px-6"
+      className="relative h-[50vh] min-h-[420px] flex flex-col items-center justify-center bg-background px-6 pt-24 pb-12 z-10"
     >
       <h1
         data-hero-animate
-        className="font-primary uppercase tracking-[0.2em] text-text-light text-center opacity-0"
+        className="font-primary uppercase tracking-[0.2em] text-text-light text-center opacity-0 mt-8"
         style={{ fontSize: 'clamp(32px, 5vw, 64px)' }}
       >
         Book a Private Viewing
@@ -178,7 +179,7 @@ function HeroSection() {
 function StepInterest({ selected, onSelect, productHint }) {
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <h2 className="font-primary uppercase tracking-[0.15em] text-text-light text-center text-[28px] md:text-[36px] mb-3">
+      <h2 className="font-primary uppercase tracking-[0.15em] text-text-dark text-center text-[28px] md:text-[36px] mb-6">
         What brings you to Maison?
       </h2>
       {productHint && (
@@ -283,7 +284,7 @@ function StepDateTime({ selectedDate, onDateSelect, selectedTime, onTimeSelect }
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      <h2 className="font-primary uppercase tracking-[0.15em] text-text-light text-center text-[28px] md:text-[36px] mb-10">
+      <h2 className="font-primary uppercase tracking-[0.15em] text-text-dark text-center text-[28px] md:text-[36px] mb-10">
         When would you like to visit?
       </h2>
 
@@ -295,17 +296,17 @@ function StepDateTime({ selectedDate, onDateSelect, selectedTime, onTimeSelect }
             onClick={prevMonth}
             disabled={!canGoPrev}
             className={`w-10 h-10 flex items-center justify-center border border-border-dark transition-colors ${
-              canGoPrev ? 'hover:border-gold text-text-light' : 'opacity-30 cursor-not-allowed text-text-muted'
+              canGoPrev ? 'hover:border-gold text-text-dark' : 'opacity-30 cursor-not-allowed text-text-dark'
             }`}
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <span className="font-secondary text-[14px] tracking-[0.2em] uppercase text-text-light">
+          <span className="font-secondary text-[14px] tracking-[0.2em] uppercase text-text-dark">
             {MONTHS[viewMonth]} {viewYear}
           </span>
           <button
             onClick={nextMonth}
-            className="w-10 h-10 flex items-center justify-center border border-border-dark hover:border-gold text-text-light transition-colors"
+            className="w-10 h-10 flex items-center justify-center border border-border-dark hover:border-gold text-text-dark transition-colors"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -337,10 +338,10 @@ function StepDateTime({ selectedDate, onDateSelect, selectedTime, onTimeSelect }
                 onClick={() => onDateSelect(new Date(viewYear, viewMonth, day))}
                 className={`aspect-square flex items-center justify-center font-secondary text-[14px] transition-all duration-300 ${
                   past
-                    ? 'text-text-muted/30 cursor-not-allowed'
+                    ? 'text-text-dark/30 cursor-not-allowed'
                     : sel
                       ? 'bg-gold text-background'
-                      : 'text-text-light hover:bg-gold/10'
+                      : 'text-text-dark hover:bg-gold/10'
                 }`}
               >
                 {day}
@@ -361,11 +362,11 @@ function StepDateTime({ selectedDate, onDateSelect, selectedTime, onTimeSelect }
               className={`px-6 py-3 border transition-all duration-400 font-secondary text-[13px] tracking-[0.1em] ${
                 isActive
                   ? 'bg-gold text-background border-gold'
-                  : 'border-border-dark text-text-light hover:border-gold'
+                  : 'border-border-dark text-text-dark hover:border-gold'
               }`}
             >
               <span className="block font-medium">{slot.label}</span>
-              <span className={`block text-[11px] mt-0.5 ${isActive ? 'text-background/70' : 'text-text-muted'}`}>
+              <span className={`block text-[11px] mt-0.5 ${isActive ? 'text-background/70' : 'text-text-dark/70'}`}>
                 {slot.time}
               </span>
             </button>
@@ -379,19 +380,19 @@ function StepDateTime({ selectedDate, onDateSelect, selectedTime, onTimeSelect }
 // ═════════════════════════════════════════════════════════════════════
 // STEP 3 — PERSONAL DETAILS
 // ═════════════════════════════════════════════════════════════════════
-function StepDetails({ form, onChange }) {
+function StepDetails({ form, onChange, errors = {} }) {
   const inputClasses =
-    'w-full bg-transparent border-b border-border-dark focus:border-gold outline-none font-secondary text-[15px] text-text-light py-3 px-0 transition-colors duration-400 placeholder:text-text-muted/50'
+    'w-full bg-white/60 border border-border-dark focus:border-gold outline-none font-secondary text-[15px] text-text-dark py-3 px-4 transition-colors duration-400 placeholder:text-text-dark/50 rounded-sm'
 
   return (
     <div className="w-full max-w-lg mx-auto">
-      <h2 className="font-primary uppercase tracking-[0.15em] text-text-light text-center text-[28px] md:text-[36px] mb-10">
+      <h2 className="font-primary uppercase tracking-[0.15em] text-text-dark text-center text-[28px] md:text-[36px] mb-10">
         Tell us about yourself
       </h2>
 
       <div className="space-y-8">
         <div>
-          <label className="block font-secondary text-[11px] tracking-[0.3em] uppercase text-text-muted mb-2">
+          <label className="block font-secondary text-[11px] tracking-[0.3em] uppercase text-text-dark/70 mb-2">
             Full Name <span className="text-gold">*</span>
           </label>
           <input
@@ -406,7 +407,7 @@ function StepDetails({ form, onChange }) {
         </div>
 
         <div>
-          <label className="block font-secondary text-[11px] tracking-[0.3em] uppercase text-text-muted mb-2">
+          <label className="block font-secondary text-[11px] tracking-[0.3em] uppercase text-text-dark/70 mb-2">
             Email <span className="text-gold">*</span>
           </label>
           <input
@@ -415,13 +416,14 @@ function StepDetails({ form, onChange }) {
             value={form.email}
             onChange={onChange}
             placeholder="alexandra@example.com"
-            className={inputClasses}
+            className={`${inputClasses} ${errors.email ? 'border-red-500 bg-red-50/50' : ''}`}
             required
           />
+          {errors.email && <p className="text-red-500 text-[11px] mt-2 font-secondary font-medium tracking-wide">{errors.email}</p>}
         </div>
 
         <div>
-          <label className="block font-secondary text-[11px] tracking-[0.3em] uppercase text-text-muted mb-2">
+          <label className="block font-secondary text-[11px] tracking-[0.3em] uppercase text-text-dark/70 mb-2">
             Phone
           </label>
           <input
@@ -430,13 +432,14 @@ function StepDetails({ form, onChange }) {
             value={form.phone}
             onChange={onChange}
             placeholder="+91 98765 43210"
-            className={inputClasses}
+            className={`${inputClasses} ${errors.phone ? 'border-red-500 bg-red-50/50' : ''}`}
           />
+          {errors.phone && <p className="text-red-500 text-[11px] mt-2 font-secondary font-medium tracking-wide">{errors.phone}</p>}
         </div>
 
         <div>
-          <label className="block font-secondary text-[11px] tracking-[0.3em] uppercase text-text-muted mb-2">
-            Message <span className="text-text-muted/50">(optional)</span>
+          <label className="block font-secondary text-[11px] tracking-[0.3em] uppercase text-text-dark/70 mb-2">
+            Message <span className="text-text-dark/50">(optional)</span>
           </label>
           <textarea
             name="message"
@@ -444,7 +447,7 @@ function StepDetails({ form, onChange }) {
             onChange={onChange}
             rows={4}
             placeholder="Tell us about your vision, occasion, or anything we should know..."
-            className={`${inputClasses} border border-border-dark focus:border-gold px-4 pt-3 resize-none`}
+            className={`${inputClasses} resize-none`}
           />
         </div>
       </div>
@@ -529,12 +532,12 @@ function StepConfirmation({ name, selectedDate, selectedTime }) {
 
       <h2
         data-confirm-text
-        className="font-primary uppercase tracking-[0.15em] text-text-light text-[28px] md:text-[36px] mb-4 opacity-0"
+        className="font-primary uppercase tracking-[0.15em] text-text-dark text-[28px] md:text-[36px] mb-4 opacity-0"
       >
         Thank you, {firstName}
       </h2>
 
-      <p data-confirm-text className="font-secondary text-[15px] text-text-muted leading-relaxed mb-3 opacity-0">
+      <p data-confirm-text className="font-secondary text-[15px] text-text-dark/80 leading-relaxed mb-3 opacity-0">
         We&apos;ll confirm your private viewing within 24 hours.
       </p>
 
@@ -588,6 +591,8 @@ export default function BookAppointmentPage() {
   const [selectedDate, setSelectedDate] = useState(null)
   const [selectedTime, setSelectedTime] = useState('')
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
+  const [errors, setErrors] = useState({})
+  const [isChecking, setIsChecking] = useState(false)
 
   const goNext = () => {
     setDirection(1)
@@ -601,10 +606,44 @@ export default function BookAppointmentPage() {
 
   const handleFormChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    // Clear error when user types
+    if (errors[e.target.name]) {
+      setErrors((prev) => ({ ...prev, [e.target.name]: null }))
+    }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!form.name.trim() || !form.email.trim()) return
+
+    setIsChecking(true)
+    setErrors({})
+
+    // Simulate server side API checking delay
+    await new Promise(resolve => setTimeout(resolve, 800))
+
+    const newErrors = {}
+    
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(form.email.trim())) {
+      newErrors.email = 'Please provide a valid email format'
+    }
+
+    // Validate phone (optional but must be valid if provided)
+    if (form.phone && form.phone.trim() !== '') {
+      const phoneRegex = /^[\d\s\+\-\(\)]{8,20}$/
+      if (!phoneRegex.test(form.phone.trim())) {
+        newErrors.phone = 'Please provide a valid phone number'
+      }
+    }
+
+    setIsChecking(false)
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+
     goNext()
   }
 
@@ -619,6 +658,11 @@ export default function BookAppointmentPage() {
 
   return (
     <>
+      <SEO
+        title="Book an Appointment"
+        description="Schedule a private viewing at MAISON's atelier. Choose your interest, select a date, and experience luxury jewellery in an intimate setting."
+        path="/book-appointment"
+      />
       <HeroSection />
 
       {/* Form Section — cream bg */}
@@ -704,7 +748,7 @@ export default function BookAppointmentPage() {
                 exit="exit"
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
-                <StepDetails form={form} onChange={handleFormChange} />
+                <StepDetails form={form} onChange={handleFormChange} errors={errors} />
               </motion.div>
             )}
 
@@ -730,30 +774,32 @@ export default function BookAppointmentPage() {
 
         {/* Navigation buttons */}
         {step < 4 && (
-          <div className="px-6 md:px-12 pb-20 flex items-center justify-between max-w-3xl mx-auto">
+          <div className="px-6 md:px-12 pb-20 flex flex-col-reverse sm:flex-row items-center justify-between max-w-3xl mx-auto gap-4 sm:gap-0">
             {step > 1 ? (
               <button
                 onClick={goBack}
-                className="group flex items-center gap-2 font-secondary text-[12px] tracking-[0.2em] uppercase text-text-dark hover:text-gold transition-colors duration-300"
+                className="group w-full sm:w-auto flex items-center justify-center sm:justify-start gap-2 py-3 sm:py-0 font-secondary text-[12px] tracking-[0.2em] uppercase text-text-dark hover:text-gold transition-colors duration-300"
               >
                 <ChevronLeft className="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" />
                 Back
               </button>
             ) : (
-              <div />
+              <div className="hidden sm:block" />
             )}
 
             <button
               onClick={step === 3 ? handleSubmit : goNext}
-              disabled={!canContinue()}
-              className={`group flex items-center gap-2 px-10 py-3.5 font-secondary text-[12px] tracking-[0.2em] uppercase transition-all duration-400 ${
-                canContinue()
+              disabled={!canContinue() || isChecking}
+              className={`group w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-3.5 font-secondary text-[11px] sm:text-[12px] tracking-[0.1em] sm:tracking-[0.2em] uppercase transition-all duration-400 ${
+                canContinue() && !isChecking
                   ? 'bg-gold text-background hover:bg-gold-hover'
                   : 'bg-gold/30 text-background/50 cursor-not-allowed'
               }`}
             >
-              {step === 3 ? 'Request Appointment' : 'Continue'}
-              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              <span className="truncate">
+                {isChecking ? 'Checking...' : (step === 3 ? 'Request Appointment' : 'Continue')}
+              </span>
+              {!isChecking && <ArrowRight className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />}
             </button>
           </div>
         )}

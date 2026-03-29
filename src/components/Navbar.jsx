@@ -2,12 +2,24 @@ import React, { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search } from 'lucide-react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
+
+    // Handle nav clicks that may scroll to sections on homepage
+    const handleNavClick = (e, link) => {
+        if (link.scrollTarget && location.pathname === '/') {
+            e.preventDefault();
+            const el = document.getElementById(link.scrollTarget);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -28,16 +40,16 @@ export default function Navbar() {
 
     const navLinks = [
         { title: "Collections", to: "/collections" },
-        { title: "Categories", to: "/categories" },
+        { title: "Categories", to: "/categories", scrollTarget: "categories-section" },
         { title: "Heritage", to: "/heritage" },
         { title: "Atelier", to: "/atelier" },
         { title: "Contact", to: "/contact" },
     ];
 
     const socialLinks = [
-        { title: "Instagram", href: "#" },
-        { title: "Pinterest", href: "#" },
-        { title: "Facebook", href: "#" },
+        { title: "Instagram", href: "https://instagram.com", external: true },
+        { title: "Pinterest", href: "https://pinterest.com", external: true },
+        { title: "Facebook", href: "https://facebook.com", external: true },
     ];
 
     // Prevent scroll when menu is open
@@ -99,17 +111,24 @@ export default function Navbar() {
                         <motion.div key={idx} variants={fadeSlideDown}>
                             <NavLink
                                 to={link.to}
+                                onClick={(e) => handleNavClick(e, link)}
                                 className={({ isActive }) =>
                                     `relative font-secondary font-normal text-[13px] tracking-[0.15em] uppercase py-2 transition-colors duration-300 group ${
-                                        isActive ? 'text-[#C9A96E]' : 'text-[#FAFAFA] hover:text-[#C9A96E]'
+                                        isActive ? 'text-gold' : 'text-text-light hover:text-gold'
                                     }`
                                 }
                             >
                                 {({ isActive }) => (
                                     <>
+                                        {/* Gold dot above active link */}
+                                        <span
+                                            className={`absolute left-1/2 -translate-x-1/2 -top-3 w-1 h-1 bg-gold transition-all duration-[400ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
+                                                isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
+                                            }`}
+                                        />
                                         {link.title}
                                         <span
-                                            className={`absolute left-0 -bottom-1 h-[1px] bg-[#C9A96E] transition-all duration-[400ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
+                                            className={`absolute left-0 -bottom-1 h-[1px] bg-gold transition-all duration-[400ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
                                                 isActive ? 'w-full' : 'w-0 group-hover:w-full'
                                             }`}
                                         />
@@ -193,6 +212,8 @@ export default function Navbar() {
                                     <a
                                         key={i}
                                         href={social.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="font-secondary text-[11px] tracking-[0.2em] uppercase text-[#FAFAFA] hover:text-[#C9A96E] transition-colors"
                                     >
                                         {social.title}

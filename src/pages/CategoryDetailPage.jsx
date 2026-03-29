@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { categories, products, collections } from '../data/jewelleryData'
 import ProductModal from '../components/ProductModal'
+import SEO from '../components/SEO'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -353,6 +354,12 @@ export default function CategoryDetailPage() {
 
   return (
     <main className="bg-background">
+      <SEO
+        title={category.name}
+        description={`Shop MAISON's ${category.name.toLowerCase()} collection. Exquisite handcrafted pieces in gold, diamond, and platinum.`}
+        image={category.image}
+        path={`/categories/${slug}`}
+      />
       {/* ── SECTION 1: CATEGORY HERO (50vh) ── */}
       <section
         ref={heroRef}

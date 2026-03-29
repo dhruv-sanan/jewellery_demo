@@ -9,6 +9,9 @@ import Footer from './Footer';
 import BackToTop from './BackToTop';
 import CustomCursor from './CustomCursor';
 import Preloader from './Preloader';
+import PageTransition from './PageTransition';
+import Breadcrumbs from './Breadcrumbs';
+import LoadingBar from './LoadingBar';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -173,43 +176,46 @@ export default function Layout() {
         )}
       </AnimatePresence>
 
+      <LoadingBar />
       <CustomCursor />
       <Navbar />
+      <Breadcrumbs />
 
       {/* Page content — wait for preloader if active */}
       {(!isFirstVisitHome || preloaderDone) ? (
-        <motion.main
-          key={location.pathname}
-          initial={navigationType === 'POP' ? { opacity: 0 } : { opacity: 0, y: 60 }}
-          animate={navigationType === 'POP' ? { opacity: 1 } : { opacity: 1, y: 0 }}
-          transition={navigationType === 'POP' ? { duration: 0.3, ease: [0.16, 1, 0.3, 1] } : { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
-          onAnimationComplete={() => {
-            ScrollTrigger.refresh(true);
-            if (lenisRef.current) lenisRef.current.resize();
-            // Final scroll restore after framer-motion animation completes
-            if (navigationType === 'POP') {
-              const saved = scrollPositions.current[location.pathname] || 0;
-              if (saved > 0) {
-                window.scrollTo(0, saved);
-                if (lenisRef.current) lenisRef.current.scrollTo(saved, { immediate: true });
+        <PageTransition>
+          <motion.main
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+            onAnimationComplete={() => {
+              ScrollTrigger.refresh(true);
+              if (lenisRef.current) lenisRef.current.resize();
+              // Final scroll restore after framer-motion animation completes
+              if (navigationType === 'POP') {
+                const saved = scrollPositions.current[location.pathname] || 0;
+                if (saved > 0) {
+                  window.scrollTo(0, saved);
+                  if (lenisRef.current) lenisRef.current.scrollTo(saved, { immediate: true });
+                }
               }
-            }
-          }}
-          className="min-h-screen bg-background text-text-light selection:bg-gold-muted selection:text-background w-full overflow-x-clip relative"
-        >
-          {/* Faint Noise Overlay */}
-          <div
-            className="pointer-events-none fixed inset-0 z-50 opacity-[0.03] mix-blend-overlay"
-            style={{
-              backgroundImage:
-                'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
-              backgroundRepeat: 'repeat',
             }}
-          />
+            className="min-h-screen bg-background text-text-light selection:bg-gold-muted selection:text-background w-full overflow-x-clip relative"
+          >
+            {/* Faint Noise Overlay */}
+            <div
+              className="pointer-events-none fixed inset-0 z-50 opacity-[0.03] mix-blend-overlay"
+              style={{
+                backgroundImage:
+                  'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
+                backgroundRepeat: 'repeat',
+              }}
+            />
 
-          <Outlet />
-          <Footer />
-        </motion.main>
+            <Outlet />
+            <Footer />
+          </motion.main>
+        </PageTransition>
       ) : null}
 
       {(!isFirstVisitHome || preloaderDone) && <BackToTop />}

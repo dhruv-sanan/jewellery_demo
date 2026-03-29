@@ -11,6 +11,7 @@ const HeritagePage = lazy(() => import('./pages/HeritagePage'));
 const AtelierPage = lazy(() => import('./pages/AtelierPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const BookAppointmentPage = lazy(() => import('./pages/BookAppointmentPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
             <Route path="/atelier" element={<AtelierPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/book-appointment" element={<BookAppointmentPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </Suspense>

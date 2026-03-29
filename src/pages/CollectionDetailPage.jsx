@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { collections, products } from '../data/jewelleryData'
 import VisitNudge from '../components/VisitNudge'
+import SEO from '../components/SEO'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -430,6 +431,12 @@ export default function CollectionDetailPage() {
 
   return (
     <main className="bg-background">
+      <SEO
+        title={collection.name}
+        description={`Discover the ${collection.name} collection by MAISON. ${collection.description || 'Handcrafted luxury jewellery pieces that tell a story.'}`}
+        image={collection.image}
+        path={`/collections/${slug}`}
+      />
       {/* ── SECTION 1: COLLECTION HERO ── */}
       <section
         ref={heroRef}
