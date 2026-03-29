@@ -152,13 +152,14 @@ export default function HeroSection() {
             width: 200,
             duration: 1.2,
             ease: "power2.out"
-        }, "-=0.6");
+        }, "-=1.8");
 
-        gsap.set(estRef.current, { opacity: 0 });
+        gsap.set(estRef.current, { opacity: 0, y: 20 });
         initTl.to(estRef.current, {
             opacity: 1,
-            duration: 1,
-            ease: "power2.out"
+            y: 0,
+            duration: 1.2,
+            ease: "power4.out"
         }, "-=0.4");
 
         // Scroll indicator looping animation
@@ -204,10 +205,8 @@ export default function HeroSection() {
                 duration: 1,
                 ease: "power2.inOut"
             }, 0);
-            stl.fromTo([titleLineRef.current, estRef.current],
-                { opacity: 1 },
-                { opacity: 0, duration: 0.4 },
-            0);
+            stl.to(titleLineRef.current, { opacity: 0, duration: 0.4 }, 0);
+            stl.to(estRef.current, { opacity: 0, duration: 0.4 }, 0);
 
             // Phase 2 reveal: Image circle clip, scale in, glow
             stl.to(bgGlowRef.current, { opacity: 1, duration: 0.8 }, 0.2);
@@ -317,7 +316,7 @@ export default function HeroSection() {
 
                     <div ref={titleLineRef} className="h-[1px] bg-[#C9A96E] mt-8 mb-6"></div>
 
-                    <p ref={estRef} className="font-secondary font-normal text-[12px] tracking-[0.2em] uppercase text-[#666666]">
+                    <p ref={estRef} className="font-secondary font-normal text-[12px] tracking-[0.2em] uppercase text-[#666666] opacity-0">
                         Established 2024 · Mumbai
                     </p>
                 </div>

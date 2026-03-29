@@ -10,15 +10,9 @@ export default function Navbar() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // Handle nav clicks that may scroll to sections on homepage
+    // Handle nav clicks — always navigate, never hijack to scroll
     const handleNavClick = (e, link) => {
-        if (link.scrollTarget && location.pathname === '/') {
-            e.preventDefault();
-            const el = document.getElementById(link.scrollTarget);
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
+        // Let React Router handle all navigation normally
     };
 
     useEffect(() => {

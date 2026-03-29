@@ -60,7 +60,7 @@ export default function Breadcrumbs() {
   return (
     <div
       ref={breadcrumbRef}
-      className={`fixed top-[65px] left-0 w-full z-40 px-6 md:px-12 py-2 transition-all duration-500 ${
+      className={`fixed top-[65px] left-0 w-full z-40 px-6 py-2 transition-all duration-500 md:hidden block ${
         visible
           ? 'opacity-100 translate-y-0 bg-background/60 backdrop-blur-sm'
           : 'opacity-0 -translate-y-2 pointer-events-none'
