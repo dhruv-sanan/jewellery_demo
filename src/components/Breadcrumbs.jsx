@@ -33,6 +33,16 @@ export default function Breadcrumbs() {
   const breadcrumbRef = useRef(null);
   const [visible, setVisible] = useState(false);
 
+  // Must call all hooks before any early return (Rules of Hooks)
+  useEffect(() => {
+    const onScroll = () => {
+      setVisible(window.scrollY > 80);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   // Don't render on homepage
   if (location.pathname === '/') return null;
 
@@ -47,15 +57,6 @@ export default function Breadcrumbs() {
     const label = routeLabels[seg] || slugToTitle(seg);
     crumbs.push({ label, to: path, isLast });
   });
-
-  useEffect(() => {
-    const onScroll = () => {
-      setVisible(window.scrollY > 80);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   return (
     <div

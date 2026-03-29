@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -130,7 +130,7 @@ export default function HeroSection() {
         };
     }, []);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         // Set up intro animations (when page loads)
         const initTl = gsap.timeline({ delay: 0.5 }); // Reduced delay to account for faster preloader
 
@@ -264,7 +264,8 @@ export default function HeroSection() {
 
         return () => {
             ctx.revert();
-            if (scrollTimelineRef.current) scrollTimelineRef.current.kill(); // Cleanup
+            initTl.kill();
+            if (scrollTimelineRef.current) scrollTimelineRef.current.kill();
         };
     }, []);
 

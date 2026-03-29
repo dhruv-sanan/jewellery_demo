@@ -71,9 +71,11 @@ export default function Layout() {
 
     lenis.on('scroll', ScrollTrigger.update);
 
-    gsap.ticker.add((time) => {
+    // Store reference so we can remove the exact same function on cleanup
+    const tickerCallback = (time) => {
       lenis.raf(time * 1000);
-    });
+    };
+    gsap.ticker.add(tickerCallback);
 
     gsap.ticker.lagSmoothing(0);
     ScrollTrigger.config({ limitCallbacks: true });
@@ -85,8 +87,8 @@ export default function Layout() {
 
     return () => {
       cancelAnimationFrame(raf);
+      gsap.ticker.remove(tickerCallback);
       lenis.destroy();
-      gsap.ticker.remove(lenis.raf);
     };
   }, [location.pathname]);
 
@@ -185,11 +187,10 @@ export default function Layout() {
       {(!isFirstVisitHome || preloaderDone) ? (
         <PageTransition>
           <motion.main
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
             onAnimationComplete={() => {
-              ScrollTrigger.refresh(true);
               if (lenisRef.current) lenisRef.current.resize();
               // Final scroll restore after framer-motion animation completes
               if (navigationType === 'POP') {

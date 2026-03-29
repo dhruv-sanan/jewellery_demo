@@ -204,18 +204,15 @@ export default function AtelierPage() {
               drawFrame(newFrame);
             }
             updateAudioVolume(self.progress);
-          },
-        },
-      });
 
-      // Blur overlay fade-out (first 12% of scroll)
-      gsap.to('.hero-blur-overlay', {
-        opacity: 0,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top top',
-          end: `+=${SCROLL_DISTANCE * 0.12}`,
-          scrub: 0.1,
+            // Blur overlay: fade out in first 12% of scroll, reappear on scroll back
+            const blurEl = containerRef.current?.querySelector('.hero-blur-overlay');
+            if (blurEl) {
+              blurEl.style.opacity = self.progress < 0.12
+                ? String(1 - self.progress / 0.12)
+                : '0';
+            }
+          },
         },
       });
 
@@ -276,17 +273,9 @@ export default function AtelierPage() {
     return () => ctx.revert();
   }, [isLoaded, drawFrame, updateAudioVolume]);
 
-  // Refresh ScrollTrigger after frames load — must happen after
-  // the Layout page-entry animation (0.85s) completes so pin
-  // positions are calculated at the final y:0 position.
-  useEffect(() => {
-    if (isLoaded) {
-      const timer = setTimeout(() => {
-        ScrollTrigger.refresh(true);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [isLoaded]);
+  // ScrollTrigger refresh is handled by Layout's onAnimationComplete
+  // (fires after motion.main settles at y:0). No extra refresh needed here —
+  // a redundant mid-scroll refresh resets scrub animations to wrong states.
 
   // Reveal Sections Animation
   useLayoutEffect(() => {

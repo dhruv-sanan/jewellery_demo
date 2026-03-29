@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -54,7 +54,7 @@ export default function CollectionsSection() {
     const scrollContainerRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         let ctx = gsap.context(() => {
             // Animate Header
             const headerTextGroup = gsap.utils.toArray(['.header-title', '.header-desc']);
