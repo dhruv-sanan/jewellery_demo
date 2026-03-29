@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-dark: #0A0A0A;
+    --bg-light: #F5F0EB;
+    --gold-muted: #C9A96E;
+    --gold-rich: #D4AF37;
+    --text-light: #FAFAFA;
+    --text-dark: #1A1A1A;
+    --border-dark: #2A2A2A;
+    --border-light: #E8E0D6;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    * {
+      cursor: none !important;
+      /* Hide default cursor globally */
+    }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .custom-cursor {
+      display: none !important;
+    }
+  }
+
+  body {
+    @apply bg-[#0A0A0A] text-[#FAFAFA] font-secondary antialiased;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-primary font-normal;
+  }
+
+}
+
+/* Lenis Scroll Setup */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Heritage page — subtle gold particle mesh */
+.heritage-particles {
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(201, 169, 110, 0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 60%, rgba(201, 169, 110, 0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 80%, rgba(201, 169, 110, 0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 20%, rgba(201, 169, 110, 0.15) 0%, transparent 100%),
+    radial-gradient(1px 1px at 10% 70%, rgba(201, 169, 110, 0.2) 0%, transparent 100%);
+  background-size: 200% 200%;
+  animation: heritage-drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes heritage-drift {
+  0% { background-position: 0% 0%; }
+  25% { background-position: 50% 30%; }
+  50% { background-position: 100% 50%; }
+  75% { background-position: 30% 80%; }
+  100% { background-position: 60% 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

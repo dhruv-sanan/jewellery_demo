@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vite:*)",
+      "Bash(md5 /Users/dhruvsanan/Desktop/Jewellery_Demo/CLAUDE.md)",
+      "Bash(ffmpeg -sseof -0.05 -i Gate_Opening_Animation_Video.mp4 -update 1 -q:v 2 /tmp/v1_last.png -y)"
+    ]
+  }
+}
