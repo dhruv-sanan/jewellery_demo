@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,34 +17,27 @@ const marqueeItems = [
 const MarqueeStrip = () => {
     const containerRef = useRef(null);
 
-    useEffect(() => {
-        // Only animate if element exists
-        if (!containerRef.current) return;
-
-        const ctx = gsap.context(() => {
-            gsap.fromTo(containerRef.current,
-                {
-                    opacity: 0,
-                    y: 20
-                },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1.2,
-                    ease: "power3.out",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: "top 85%",
-                        toggleActions: "play none none reverse",
-                        fastScrollEnd: true,
-                    }
+    useGSAP(() => {
+        gsap.fromTo(containerRef.current,
+            {
+                opacity: 0,
+                y: 20
+            },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                ease: "power3.out",
+                force3D: true,
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse",
+                    fastScrollEnd: true,
                 }
-            );
-        }, containerRef);
-
-        return () => ctx.revert();
-    }, []);
+            }
+        );
+    }, { scope: containerRef });
 
     return (
         <section

@@ -1,20 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import necklacesImg from '../assets/categories/necklaces.jpg';
-import ringsImg from '../assets/categories/rings.jpg';
-import earringsImg from '../assets/categories/earrings.jpg';
-import banglesImg from '../assets/categories/bangles.jpg';
-import braceletsImg from '../assets/categories/bracelets.jpg';
-import bridalImg from '../assets/categories/bridal.jpg';
+import { categories as sharedCategories } from '../data/jewelleryData';
 
-const categories = [
-  { id: 'necklaces', name: 'Necklaces', count: '48 PIECES', image: necklacesImg },
-  { id: 'rings', name: 'Rings', count: '24 PIECES', image: ringsImg },
-  { id: 'earrings', name: 'Earrings', count: '62 PIECES', image: earringsImg },
-  { id: 'bangles', name: 'Bangles', count: '36 PIECES', image: banglesImg },
-  { id: 'bracelets', name: 'Bracelets', count: '18 PIECES', image: braceletsImg },
-  { id: 'bridal', name: 'Bridal', count: '12 SETS', image: bridalImg },
-];
+const categories = sharedCategories.map(c => ({
+  ...c,
+  count: c.count.toUpperCase(),
+}));
 
 const NAVBAR_HEIGHT = 80; // px
 const CARD_OFFSET = 30;   // px between each card's sticky top position
@@ -84,7 +75,7 @@ const StackedCategoriesSection = () => {
               to={`/categories/${category.id}`}
               key={category.id}
               data-sticky-card
-              className="sticky w-full rounded-[24px] overflow-hidden block"
+              className="sticky w-full overflow-hidden block"
               style={{
                 top: `${stickyTop}px`,
                 zIndex: index + 1,
@@ -100,6 +91,8 @@ const StackedCategoriesSection = () => {
               <img
                 src={category.image}
                 alt={category.name}
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 w-full h-full object-cover object-center"
               />
 

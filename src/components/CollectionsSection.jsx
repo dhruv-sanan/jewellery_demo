@@ -1,61 +1,23 @@
-import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-import imgBloom from '../assets/eternal_bloom_collection_1773561954785.jpg';
-import imgCelestial from '../assets/celestial_radiance_collection_1773561972307.jpg';
-import imgHeritage from '../assets/heritage_redux_collection_1773561991971.jpg';
-import imgMidnight from '../assets/midnight_garden_collection_1773562006471.jpg';
+import { useGSAP } from '@gsap/react';
+import { collections as sharedCollections } from '../data/jewelleryData';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const collections = [
-    {
-        id: 1,
-        slug: "eternal-bloom",
-        tag: "AUTUMN/WINTER 2024",
-        title: "The Eternal Bloom",
-        description: "Inspired by the eternal beauty of blooming gardens, this collection features organic gold forms adorned with brilliant-cut diamonds and vivid gemstones.",
-        count: "12 Exclusive Pieces",
-        image: imgBloom
-    },
-    {
-        id: 2,
-        slug: "celestial-radiance",
-        tag: "SPRING / SUMMER 2025",
-        title: "Celestial Radiance",
-        description: "Drawing from the cosmos, each piece captures the ethereal glow of moonstone paired with the brilliance of VS-clarity diamonds in platinum settings.",
-        count: "8 Exclusive Pieces",
-        image: imgCelestial
-    },
-    {
-        id: 3,
-        slug: "heritage-redux",
-        tag: "TRADITIONAL",
-        title: "Heritage Redux",
-        description: "A reimagining of centuries-old kundan techniques through a contemporary lens. Each piece bridges ancestral artistry and modern aesthetics.",
-        count: "15 Exclusive Pieces",
-        image: imgHeritage
-    },
-    {
-        id: 4,
-        slug: "midnight-garden",
-        tag: "COCKTAIL & EVENING",
-        title: "Midnight Garden",
-        description: "Bold, dramatic pieces designed for the night. Deep sapphires, black onyx, and dark emeralds set in architectural gold formations.",
-        count: "10 Exclusive Pieces",
-        image: imgMidnight
-    }
-];
+const collections = sharedCollections.map(c => ({
+    ...c,
+    title: c.name,
+}));
 
 export default function CollectionsSection() {
     const sectionRef = useRef(null);
     const scrollContainerRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
 
-    useLayoutEffect(() => {
-        let ctx = gsap.context(() => {
+    useGSAP(() => {
             // Animate Header
             const headerTextGroup = gsap.utils.toArray(['.header-title', '.header-desc']);
             gsap.fromTo(
@@ -134,10 +96,7 @@ export default function CollectionsSection() {
                     onEnterBack: () => setActiveIndex(i),
                 });
             });
-        }, sectionRef);
-
-        return () => ctx.revert();
-    }, []);
+    }, { scope: sectionRef });
 
     // We no longer need smooth scroll buttons as the entire section is powered by native scroll
     const scrollToCard = (idx) => {
@@ -207,7 +166,7 @@ export default function CollectionsSection() {
                     {collections.map((item, idx) => (
                         <div
                             key={item.id}
-                            className="collection-card flex-shrink-0 w-[85vw] md:w-[70vw] h-auto max-h-[82vh] md:max-h-none md:h-[60vh] mr-6 md:mr-10 flex flex-col md:flex-row shadow-2xl bg-[#111] rounded-xl border border-white/5 md:border-none md:rounded-none overflow-hidden"
+                            className="collection-card flex-shrink-0 w-[85vw] md:w-[70vw] h-auto max-h-[82vh] md:max-h-none md:h-[60vh] mr-6 md:mr-10 flex flex-col md:flex-row shadow-2xl bg-[#111] border border-white/5 md:border-none overflow-hidden"
                         >
                             {/* Image Panel */}
                             <div className="w-full md:w-[55%] h-[35vh] md:h-full relative overflow-hidden bg-[#111] shrink-0">

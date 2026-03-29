@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,67 +22,63 @@ const InstagramSection = () => {
   const gridWrapperRef = useRef(null);
   const footerRef = useRef(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Header Animation
-      gsap.fromTo(
-        headerRef.current.children,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          stagger: 0.15,
-          ease: "power3.out",
-          force3D: true,
-          scrollTrigger: {
-            trigger: headerRef.current,
-            start: "top 80%",
-            fastScrollEnd: true,
-          }
+  useGSAP(() => {
+    // Header Animation
+    gsap.fromTo(
+      headerRef.current.children,
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        stagger: 0.15,
+        ease: "power3.out",
+        force3D: true,
+        scrollTrigger: {
+          trigger: headerRef.current,
+          start: "top 80%",
+          fastScrollEnd: true,
         }
-      );
+      }
+    );
 
-      // Grid Animation
-      gsap.fromTo(
-        gridWrapperRef.current,
-        { opacity: 0, x: 100 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 1.5,
-          ease: "power3.out",
-          force3D: true,
-          scrollTrigger: {
-            trigger: gridWrapperRef.current,
-            start: "top 80%",
-            fastScrollEnd: true,
-          }
+    // Grid Animation
+    gsap.fromTo(
+      gridWrapperRef.current,
+      { opacity: 0, x: 100 },
+      {
+        opacity: 1,
+        x: 0,
+        duration: 1.5,
+        ease: "power3.out",
+        force3D: true,
+        scrollTrigger: {
+          trigger: gridWrapperRef.current,
+          start: "top 80%",
+          fastScrollEnd: true,
         }
-      );
+      }
+    );
 
-      // Footer Animation
-      gsap.fromTo(
-        footerRef.current.children,
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          stagger: 0.15,
-          ease: "power3.out",
-          force3D: true,
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: "top 90%",
-            fastScrollEnd: true,
-          }
+    // Footer Animation
+    gsap.fromTo(
+      footerRef.current.children,
+      { opacity: 0, y: 20 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        stagger: 0.15,
+        ease: "power3.out",
+        force3D: true,
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 90%",
+          fastScrollEnd: true,
         }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+      }
+    );
+  }, { scope: sectionRef });
 
   return (
     <section 
@@ -135,7 +132,7 @@ const InstagramSection = () => {
               {instagramData.map((item, idx) => (
                 <div 
                   key={`g1-${item.id}-${idx}`}
-                  className="insta-item group relative flex-shrink-0 cursor-pointer overflow-hidden border border-[#2A2A2A] rounded-[8px] w-[200px] h-[260px] md:w-[280px] md:h-[350px]"
+                  className="insta-item group relative flex-shrink-0 cursor-pointer overflow-hidden border border-[#2A2A2A]  w-[200px] h-[260px] md:w-[280px] md:h-[350px]"
                   style={{ background: item.bgGradient }}
                 >
                   <div className="absolute inset-0 flex items-center justify-center opacity-20 text-[#C9A96E] text-[40px]">
@@ -165,7 +162,7 @@ const InstagramSection = () => {
               {instagramData.map((item, idx) => (
                 <div 
                   key={`g2-${item.id}-${idx}`}
-                  className="insta-item group relative flex-shrink-0 cursor-pointer overflow-hidden border border-[#2A2A2A] rounded-[8px] w-[200px] h-[260px] md:w-[280px] md:h-[350px]"
+                  className="insta-item group relative flex-shrink-0 cursor-pointer overflow-hidden border border-[#2A2A2A]  w-[200px] h-[260px] md:w-[280px] md:h-[350px]"
                   style={{ background: item.bgGradient }}
                 >
                   <div className="absolute inset-0 flex items-center justify-center opacity-20 text-[#C9A96E] text-[40px]">
@@ -198,7 +195,7 @@ const InstagramSection = () => {
         <p className="font-secondary text-[14px] text-[#888888] text-center">
           Join 250K+ followers who celebrate fine craftsmanship
         </p>
-        <button className="font-secondary text-[13px] tracking-wider uppercase text-text-light border border-gold-muted px-8 py-4 rounded-[2px] bg-transparent hover:bg-gold-rich hover:border-gold-rich hover:text-[#1A1A1A] transition-colors duration-500">
+        <button className="font-secondary text-[13px] tracking-wider uppercase text-text-light border border-gold-muted px-8 py-4 bg-transparent hover:bg-gold-rich hover:border-gold-rich hover:text-[#1A1A1A] transition-colors duration-500">
           Follow Us on Instagram
         </button>
       </div>

@@ -142,7 +142,7 @@ export default function Navbar() {
                     </div>
                     <Link
                         to="/book-appointment"
-                        className="font-secondary font-normal text-[12px] tracking-[0.15em] uppercase text-[#C9A96E] border border-[#C9A96E] px-6 py-3 transition-all duration-500 hover:bg-[#C9A96E] hover:text-[#0A0A0A] rounded-[2px]"
+                        className="font-secondary font-normal text-[12px] tracking-[0.15em] uppercase text-[#C9A96E] border border-[#C9A96E] px-6 py-3 transition-all duration-500 hover:bg-[#C9A96E] hover:text-[#0A0A0A]"
                     >
                         Book Appointment
                     </Link>
@@ -217,7 +217,7 @@ export default function Navbar() {
                             <Link
                                 to="/book-appointment"
                                 onClick={() => setIsOpen(false)}
-                                className="w-full font-secondary font-normal text-[13px] tracking-[0.15em] uppercase text-[#0A0A0A] bg-[#C9A96E] py-4 rounded-[2px] hover:bg-[#D4AF37] transition-colors text-center"
+                                className="w-full font-secondary font-normal text-[13px] tracking-[0.15em] uppercase text-[#0A0A0A] bg-[#C9A96E] py-4 hover:bg-[#D4AF37] transition-colors text-center"
                             >
                                 Book Appointment
                             </Link>

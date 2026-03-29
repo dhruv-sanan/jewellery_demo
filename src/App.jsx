@@ -16,7 +16,11 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 export default function App() {
   return (
     <BrowserRouter>
-      <Suspense fallback={null}>
+      <Suspense fallback={
+        <div className="fixed inset-0 bg-background z-50 flex items-center justify-center">
+          <span className="font-primary text-gold text-2xl tracking-[0.3em] animate-pulse">MAISON</span>
+        </div>
+      }>
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />

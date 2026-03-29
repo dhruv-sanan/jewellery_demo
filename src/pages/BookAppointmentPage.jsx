@@ -382,7 +382,7 @@ function StepDateTime({ selectedDate, onDateSelect, selectedTime, onTimeSelect }
 // ═════════════════════════════════════════════════════════════════════
 function StepDetails({ form, onChange, errors = {} }) {
   const inputClasses =
-    'w-full bg-white/60 border border-border-dark focus:border-gold outline-none font-secondary text-[15px] text-text-dark py-3 px-4 transition-colors duration-400 placeholder:text-text-dark/50 rounded-sm'
+    'w-full bg-white/60 border border-border-dark focus:border-gold outline-none font-secondary text-[15px] text-text-dark py-3 px-4 transition-colors duration-400 placeholder:text-text-dark/50'
 
   return (
     <div className="w-full max-w-lg mx-auto">

@@ -1,6 +1,7 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,7 +12,10 @@ const CraftsmanshipSection = () => {
   const stepsRef = useRef([]);
   const finalPromiseRef = useRef(null);
   const lineRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768;
+  });
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -20,8 +24,7 @@ const CraftsmanshipSection = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useLayoutEffect(() => {
-    let ctx = gsap.context(() => {
+  useGSAP(() => {
       const animateNumbers = () => {
         numbersRef.current.forEach((el, index) => {
           if (!el) return;
@@ -67,22 +70,18 @@ const CraftsmanshipSection = () => {
 
         if (finalPromiseRef.current) {
           const words = finalPromiseRef.current.querySelectorAll('.word');
-          gsap.fromTo(words,
-            { opacity: 0, y: 20 },
-            {
-              opacity: 1,
-              y: 0,
-              stagger: 0.18,
-              duration: 3,
-              ease: 'power2.out',
-              force3D: true,
-              scrollTrigger: {
-                trigger: '.phase-3',
-                start: 'top 80%',
-                fastScrollEnd: true,
-              }
+          gsap.set(words, { opacity: 0.15 });
+          gsap.to(words, {
+            opacity: 1,
+            stagger: 0.15,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.phase-3',
+              start: 'top 85%',
+              end: 'bottom 60%',
+              scrub: 1,
             }
-          );
+          });
         }
 
         // Wait for images to load, then refresh
@@ -169,10 +168,7 @@ const CraftsmanshipSection = () => {
         );
       }
 
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, [isMobile]);
+  }, { scope: sectionRef, dependencies: [isMobile] });
 
   const steps = [
     { num: '01', title: 'Design', desc: 'Every masterpiece begins with a vision. Our master designers translate inspiration into intricate sketches, capturing the essence of the stone.', img: '/craftsmanship_design.jpg' },

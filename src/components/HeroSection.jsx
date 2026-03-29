@@ -1,7 +1,8 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import heroImage from '../assets/hero_necklace_1773561659359.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -130,7 +131,7 @@ export default function HeroSection() {
         };
     }, []);
 
-    useLayoutEffect(() => {
+    useGSAP(() => {
         // Set up intro animations (when page loads)
         const initTl = gsap.timeline({ delay: 0.5 }); // Reduced delay to account for faster preloader
 
@@ -177,7 +178,6 @@ export default function HeroSection() {
         gsap.set(statementRef.current, { opacity: 0, y: 50 });
         gsap.set(ctaWrapRef.current, { opacity: 0, y: 30 });
 
-        const ctx = gsap.context(() => {
             // Main ScrollTrigger Timeline
             const stl = gsap.timeline({
                 scrollTrigger: {
@@ -260,14 +260,11 @@ export default function HeroSection() {
 
             stl.to(ctaWrapRef.current, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 1.6);
 
-        }, sectionRef);
-
         return () => {
-            ctx.revert();
             initTl.kill();
             if (scrollTimelineRef.current) scrollTimelineRef.current.kill();
         };
-    }, []);
+    }, { scope: sectionRef });
 
     // Helpers to split text
     const renderChars = (text) => {
@@ -391,7 +388,7 @@ export default function HeroSection() {
                         </h2>
 
                         <div ref={ctaWrapRef}>
-                            <button className="group relative flex items-center justify-center px-8 py-4 md:px-10 md:py-5 border border-[#C9A96E] bg-transparent overflow-hidden rounded-[2px] transition-colors duration-500 hover:border-[#D4AF37]">
+                            <button className="group relative flex items-center justify-center px-8 py-4 md:px-10 md:py-5 border border-[#C9A96E] bg-transparent overflow-hidden transition-colors duration-500 hover:border-[#D4AF37]">
                                 <div className="absolute inset-0 w-full h-full bg-[#C9A96E] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]"></div>
                                 <span className="relative z-10 font-primary text-base md:text-[18px] text-[#FAFAFA] group-hover:text-[#0A0A0A] transition-colors duration-500 flex items-center gap-3 md:gap-4">
                                     Explore Collections

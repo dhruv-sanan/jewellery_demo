@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -84,8 +85,7 @@ const CelebritySection = () => {
   const quoteRef = useRef(null);
   const quoteTextRef = useRef(null);
 
-  useEffect(() => {
-    let ctx = gsap.context(() => {
+  useGSAP(() => {
       // Header Animation
       gsap.from(".celeb-header-elem", {
         y: 40,
@@ -194,10 +194,7 @@ const CelebritySection = () => {
         }
       )
 
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  }, { scope: sectionRef });
 
   const quoteStr = "The craftsmanship is unparalleled. Each piece feels like it was made just for me.";
   const quoteWords = quoteStr.split(" ");

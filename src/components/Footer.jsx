@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import { Instagram, Facebook, Youtube } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -10,43 +11,38 @@ const Footer = () => {
     const columnsRef = useRef([]);
     const newsletterRef = useRef(null);
 
-    useEffect(() => {
-        let ctx = gsap.context(() => {
-            // Footer columns stagger animation
-            gsap.fromTo(columnsRef.current,
-                { opacity: 0, y: 30 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    stagger: 0.1,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: footerRef.current,
-                        start: 'top 85%',
-                    }
+    useGSAP(() => {
+        // Footer columns stagger animation
+        gsap.fromTo(columnsRef.current,
+            { opacity: 0, y: 30 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: footerRef.current,
+                    start: 'top 85%',
                 }
-            );
+            }
+        );
 
-            // Newsletter fade in
-            gsap.fromTo(newsletterRef.current,
-                { opacity: 0 },
-                {
-                    opacity: 1,
-                    duration: 1,
-                    delay: 0.4,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: footerRef.current,
-                        start: 'top 85%',
-                    }
+        // Newsletter fade in
+        gsap.fromTo(newsletterRef.current,
+            { opacity: 0 },
+            {
+                opacity: 1,
+                duration: 1,
+                delay: 0.4,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: footerRef.current,
+                    start: 'top 85%',
                 }
-            );
-
-        }, footerRef);
-
-        return () => ctx.revert();
-    }, []);
+            }
+        );
+    }, { scope: footerRef });
 
     const categoryLinks = ['Necklaces', 'Rings', 'Earrings', 'Bangles', 'Bracelets', 'Bridal'];
     const companyLinks = [

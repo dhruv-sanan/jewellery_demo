@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 export default function CustomCursor() {
     const cursorRef = useRef(null);
@@ -16,7 +17,7 @@ export default function CustomCursor() {
         if (isTouch || isSmall) setShouldRender(false);
     }, []);
 
-    useEffect(() => {
+    useGSAP(() => {
         if (!shouldRender || !cursorRef.current) return;
 
         gsap.set(cursorRef.current, { scale: 0, opacity: 0 });
@@ -69,7 +70,7 @@ export default function CustomCursor() {
             document.removeEventListener('mouseleave', onMouseLeave);
             document.removeEventListener('mouseenter', onMouseEnter);
         };
-    }, [isHovering, shouldRender]);
+    }, { dependencies: [isHovering, shouldRender], scope: cursorRef });
 
     if (!shouldRender) return null;
 

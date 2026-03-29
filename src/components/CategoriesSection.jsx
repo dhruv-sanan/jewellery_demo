@@ -1,24 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import necklacesImg from '../assets/categories/necklaces.jpg';
-import ringsImg from '../assets/categories/rings.jpg';
-import earringsImg from '../assets/categories/earrings.jpg';
-import banglesImg from '../assets/categories/bangles.jpg';
-import braceletsImg from '../assets/categories/bracelets.jpg';
-import bridalImg from '../assets/categories/bridal.jpg';
+import { useGSAP } from '@gsap/react';
+import { categories } from '../data/jewelleryData';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const categories = [
-    { id: 'necklaces', name: 'Necklaces', count: '48 Pieces', image: necklacesImg, type: 'large' },
-    { id: 'rings', name: 'Rings', count: '24 Pieces', image: ringsImg, type: 'small' },
-    { id: 'earrings', name: 'Earrings', count: '62 Pieces', image: earringsImg, type: 'small' },
-    { id: 'bangles', name: 'Bangles', count: '36 Pieces', image: banglesImg, type: 'small' },
-    { id: 'bracelets', name: 'Bracelets', count: '18 Pieces', image: braceletsImg, type: 'small' },
-    { id: 'bridal', name: 'Bridal', count: '12 Sets', image: bridalImg, type: 'large' },
-];
 
 const CategoryCard = ({ category, className = '', refEl }) => {
     const isLarge = category.type === 'large';
@@ -79,8 +66,7 @@ const CategoriesSection = () => {
         );
     };
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
+    useGSAP(() => {
             // Title Animation
             const chars = titleContainerRef.current.querySelectorAll('.split-char');
 
@@ -220,10 +206,7 @@ const CategoriesSection = () => {
                 }
             });
 
-        }, sectionRef);
-
-        return () => ctx.revert();
-    }, []);
+    }, { scope: sectionRef });
 
     return (
         <section
@@ -298,7 +281,7 @@ const CategoriesSection = () => {
                             <div ref={el => mobileInnerRef.current[index] = el} className="w-full">
                                 <CategoryCard
                                     category={category}
-                                    className="w-full shadow-[0_-10px_30px_rgba(0,0,0,0.15)] rounded-t-3xl overflow-hidden"
+                                    className="w-full shadow-[0_-10px_30px_rgba(0,0,0,0.15)] overflow-hidden"
                                 />
                             </div>
                         </div>
