@@ -357,7 +357,7 @@ export default function AtelierPage() {
       </AnimatePresence>
 
       {/* ═══ AMBIENT AUDIO ═══ */}
-      <audio ref={audioRef} src="/audio/atelier-ambiance.mp3" loop preload="auto" />
+      <audio ref={audioRef} src="/audio/atelier-ambiance.mp3" loop preload="none" />
 
       {/* ═══ SECTION 1: CANVAS SCROLL EXPERIENCE ═══ */}
       <section ref={containerRef} className="relative w-screen h-screen">
