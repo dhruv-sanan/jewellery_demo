@@ -3,20 +3,24 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { collections, categories } from '../data/jewelleryData';
-
 gsap.registerPlugin(ScrollTrigger);
 
-// Build a readable name from a slug
+// Lightweight slug→name map (avoids importing jewelleryData + all its images)
+const slugNames = {
+  'eternal-bloom': 'Eternal Bloom',
+  'celestial-radiance': 'Celestial Radiance',
+  'heritage-redux': 'Heritage Redux',
+  'midnight-garden': 'Midnight Garden',
+  'necklaces': 'Necklaces',
+  'rings': 'Rings',
+  'earrings': 'Earrings',
+  'bangles': 'Bangles',
+  'bracelets': 'Bracelets',
+  'bridal': 'Bridal',
+};
+
 function slugToTitle(slug) {
-  // Check collections
-  const col = collections.find(c => c.slug === slug);
-  if (col) return col.name;
-  // Check categories
-  const cat = categories.find(c => c.slug === slug);
-  if (cat) return cat.name;
-  // Fallback: capitalize words
-  return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  return slugNames[slug] || slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
 const routeLabels = {
